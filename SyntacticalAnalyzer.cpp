@@ -14,12 +14,14 @@ SyntacticalAnalyzer::SyntacticalAnalyzer(char *filename)
   lex = new LexicalAnalyzer(filename);
   errors = 0;
   token = lex->GetToken();
+  code = new CodeGen(filename);
   errors = program();
 }
 
 SyntacticalAnalyzer::~SyntacticalAnalyzer()
 {
   delete lex;
+  delete code;
 }
 
 int SyntacticalAnalyzer::any_other_token()

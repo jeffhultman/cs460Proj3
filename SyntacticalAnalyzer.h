@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include "LexicalAnalyzer.h"
+#include "CodeGenerator.h"
 
 using namespace std;
 
@@ -34,6 +35,7 @@ class SyntacticalAnalyzer
 	LexicalAnalyzer * lex;
 	token_type token;
 	int errors;
+	CodeGen * code;
 };
 	
 #endif

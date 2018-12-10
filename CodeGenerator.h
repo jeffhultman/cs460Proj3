@@ -3,19 +3,17 @@
 
 #include <iostream>
 #include <fstream>
-#include "LexicalAnalyzer.h"
 
 using namespace std;
 
 class CodeGen 
 {
     public:
-	CodeGen (string filename, LexicalAnalyzer * L);
+	CodeGen (string filename);
 	~CodeGen ();
 	void WriteCode (int tabs, string code);
     private:
-	LexicalAnalyzer * lex;
-	ofstream cpp;
+	ofstream py;
 };
 	
 #endif
