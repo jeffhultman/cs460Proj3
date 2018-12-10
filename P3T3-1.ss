@@ -8,7 +8,7 @@
   (func2)
   )
 
-(define (func2)
+(define (func2 a b c gy vg gb hb hj n)
   (display '('list? zero? null? string? +))
   (newline)
   )

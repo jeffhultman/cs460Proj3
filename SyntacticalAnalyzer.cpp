@@ -15,7 +15,8 @@ SyntacticalAnalyzer::SyntacticalAnalyzer(char *filename)
   errors = 0;
   token = lex->GetToken();
   code = new CodeGen(filename);
-  errors = program();
+  int tabs = 0;
+  errors = program(tabs);
 }
 
 SyntacticalAnalyzer::~SyntacticalAnalyzer()
@@ -24,7 +25,7 @@ SyntacticalAnalyzer::~SyntacticalAnalyzer()
   delete code;
 }
 
-int SyntacticalAnalyzer::any_other_token()
+int SyntacticalAnalyzer::any_other_token(int tabs)
 {
   lex->ReportFunctionEntered("Any_Other_Token", token);
 
@@ -192,7 +193,7 @@ int SyntacticalAnalyzer::any_other_token()
     // applying rule 50
     lex->ReportRuleUsed("50");
     token = lex->GetToken();
-    more_tokens();
+    more_tokens(tabs);
     if (token == RPAREN_T)
       token = lex->GetToken();
     else
@@ -206,7 +207,7 @@ int SyntacticalAnalyzer::any_other_token()
     // applying rule 79
     lex->ReportRuleUsed("79");
     token = lex->GetToken();
-    any_other_token();
+    any_other_token( tabs);
   }
   else
   {
@@ -219,7 +220,7 @@ int SyntacticalAnalyzer::any_other_token()
   return errors;
 }
 
-int SyntacticalAnalyzer::action()
+int SyntacticalAnalyzer::action(int tabs)
 {
   lex->ReportFunctionEntered("Action", token);
 
@@ -228,9 +229,9 @@ int SyntacticalAnalyzer::action()
     // applying rule 24
     lex->ReportRuleUsed("24");
     token = lex->GetToken();
-    stmt();
-    stmt();
-    else_part();
+    stmt(tabs);
+    stmt(tabs);
+    else_part(tabs);
   }
   else if (token == COND_T)
   {
@@ -240,7 +241,7 @@ int SyntacticalAnalyzer::action()
     if (token == LPAREN_T)
     {
       token = lex->GetToken();
-      stmt_pair_body();
+      stmt_pair_body(tabs);
     }
     else
     {
@@ -252,151 +253,151 @@ int SyntacticalAnalyzer::action()
   {
     lex->ReportRuleUsed("26");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
   }
   else if (token == NOT_T)
   {
     lex->ReportRuleUsed("30");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
   }
 
   else if (token == NUMBERP_T)
   {
     lex->ReportRuleUsed("31");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
   }
   else if (token == LISTP_T)
   {
     lex->ReportRuleUsed("32");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
   }
   else if (token == ZEROP_T)
   {
     lex->ReportRuleUsed("33");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
   }
   else if (token == NULLP_T)
   {
     lex->ReportRuleUsed("34");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
   }
   else if (token == STRINGP_T)
   {
     lex->ReportRuleUsed("35");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
   }
   else if (token == ROUND_T)
   {
     lex->ReportRuleUsed("41");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
   }
 
   else if (token == DISPLAY_T)
   {
     lex->ReportRuleUsed("48");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
   }
   else if (token == CONS_T)
   {
     // applying rule 27
     lex->ReportRuleUsed("27");
     token = lex->GetToken();
-    stmt();
-    stmt();
+    stmt(tabs);
+    stmt(tabs);
   }
   else if (token == MODULO_T)
   {
     // applying rule 40
     lex->ReportRuleUsed("40");
     token = lex->GetToken();
-    stmt();
-    stmt();
+    stmt(tabs);
+    stmt(tabs);
   }
   else if (token == AND_T)
   {
     lex->ReportRuleUsed("28");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
   else if (token == OR_T)
   {
     lex->ReportRuleUsed("29");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
 
   else if (token == PLUS_T)
   {
     lex->ReportRuleUsed("36");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
 
   else if (token == MULT_T)
   {
     lex->ReportRuleUsed("39");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
   else if (token == EQUALTO_T)
   {
     lex->ReportRuleUsed("42");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
   else if (token == GT_T)
   {
     lex->ReportRuleUsed("43");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
   else if (token == LT_T)
   {
     lex->ReportRuleUsed("44");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
   else if (token == GTE_T)
   {
     lex->ReportRuleUsed("45");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
   else if (token == LTE_T)
   {
     lex->ReportRuleUsed("46");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
   else if (token == IDENT_T)
   {
     lex->ReportRuleUsed("47");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
   }
   else if (token == MINUS_T)
   {
     // applying rules 37
     lex->ReportRuleUsed("37");
     token = lex->GetToken();
-    stmt();
-    stmt_list();
+    stmt(tabs);
+    stmt_list(tabs);
   }
 
   else if(token == DIV_T)
   {
     lex->ReportRuleUsed("38");
     token = lex->GetToken();
-    stmt();
-    stmt_list();
+    stmt(tabs);
+    stmt_list(tabs);
   }
   else if (token == NEWLINE_T)
   {
@@ -415,7 +416,7 @@ int SyntacticalAnalyzer::action()
   return errors;
 }
 
-int SyntacticalAnalyzer::stmt_pair_body()
+int SyntacticalAnalyzer::stmt_pair_body(int tabs)
 {
   lex->ReportFunctionEntered("Stmt_Pair_Body", token);
 
@@ -424,7 +425,7 @@ int SyntacticalAnalyzer::stmt_pair_body()
     // applying rule 23
     lex->ReportRuleUsed("23");
     token = lex->GetToken();
-    stmt();
+    stmt(tabs);
     if (token == RPAREN_T)
       token = lex->GetToken();
     else
@@ -437,8 +438,8 @@ int SyntacticalAnalyzer::stmt_pair_body()
   {
     // applying rule 22
     lex->ReportRuleUsed("22");
-    stmt();
-    stmt();
+    stmt(tabs);
+    stmt(tabs);
     if (token == RPAREN_T)
       token = lex->GetToken();
     else
@@ -446,14 +447,14 @@ int SyntacticalAnalyzer::stmt_pair_body()
       lex->ReportError("'RPAREN_T' expected");
       errors++;
     }
-    stmt_pair();
+    stmt_pair(tabs);
   }
 
   lex->ReportFunctionExited("Stmt_Pair_Body", token);
   return errors;
 }
 
-int SyntacticalAnalyzer::stmt_pair()
+int SyntacticalAnalyzer::stmt_pair(int tabs)
 {
   lex->ReportFunctionEntered("Stmt_Pair", token);
 
@@ -462,7 +463,7 @@ int SyntacticalAnalyzer::stmt_pair()
     // applying rule 20
     lex->ReportRuleUsed("20");
     token = lex->GetToken();
-    stmt_pair_body();
+    stmt_pair_body(tabs);
   }
   else if (token == RPAREN_T)
   {
@@ -476,7 +477,7 @@ int SyntacticalAnalyzer::stmt_pair()
   return errors;
 }
 
-int SyntacticalAnalyzer::else_part()
+int SyntacticalAnalyzer::else_part(int tabs)
 {
   lex->ReportFunctionEntered("Else_Part", token);
 
@@ -489,16 +490,16 @@ int SyntacticalAnalyzer::else_part()
   }
   // applying rule 18
   lex->ReportRuleUsed("18");
-  stmt();
+  stmt(tabs);
 
   lex->ReportFunctionExited("Else_Part", token);
   return errors;
 }
 
-int SyntacticalAnalyzer::param_list()
+int SyntacticalAnalyzer::param_list(int tabs)
 {
   lex->ReportFunctionEntered("Param_List", token);
-
+  
   if (token == RPAREN_T)
   {
     // applying rule 17
@@ -509,16 +510,19 @@ int SyntacticalAnalyzer::param_list()
   else if (token == IDENT_T)
   {
     // applying rule 16
+    code -> WriteCode(0, lex->GetLexeme());
     lex->ReportRuleUsed("16");
     token = lex->GetToken();
-    param_list();
+    if(token != RPAREN_T)
+      code -> WriteCode(0, ", ");
+    param_list(tabs);
   }
 
   lex->ReportFunctionExited("Param_List", token);
   return errors;
 }
 
-int SyntacticalAnalyzer::more_tokens()
+int SyntacticalAnalyzer::more_tokens(int tabs)
 {
   lex->ReportFunctionEntered("More_Tokens", token);
 
@@ -531,25 +535,25 @@ int SyntacticalAnalyzer::more_tokens()
   }
   // applying rule 14
   lex->ReportRuleUsed("14");
-  any_other_token();
-  more_tokens();
+  any_other_token(tabs);
+  more_tokens(tabs);
 
   lex->ReportFunctionExited("More_Tokens", token);
   return errors;
 }
 
-int SyntacticalAnalyzer::quoted_lit()
+int SyntacticalAnalyzer::quoted_lit(int tabs)
 {
   lex->ReportFunctionEntered("Quoted_Lit", token);
   // applying rule 13
   lex->ReportRuleUsed("13");
-  any_other_token();
+  any_other_token(tabs);
 
   lex->ReportFunctionExited("Quoted_Lit", token);
   return errors;
 }
 
-int SyntacticalAnalyzer::literal()
+int SyntacticalAnalyzer::literal(int tabs)
 {
   lex->ReportFunctionEntered("Literal", token);
 
@@ -570,7 +574,7 @@ int SyntacticalAnalyzer::literal()
     // applying rule 12
     lex->ReportRuleUsed("12");
     token = lex->GetToken();
-    quoted_lit();
+    quoted_lit(tabs);
   }
   else
   {
@@ -583,7 +587,7 @@ int SyntacticalAnalyzer::literal()
   return errors;
 }
 
-int SyntacticalAnalyzer::stmt()
+int SyntacticalAnalyzer::stmt(int tabs)
 {
   lex->ReportFunctionEntered("Stmt", token);
 
@@ -598,7 +602,7 @@ int SyntacticalAnalyzer::stmt()
     // applying rule 9
     lex->ReportRuleUsed("9");
     token = lex->GetToken();
-    action();
+    action(tabs);
     if (token == RPAREN_T)
       token = lex->GetToken();
     else
@@ -611,14 +615,14 @@ int SyntacticalAnalyzer::stmt()
   {
     // applying rule 7
     lex->ReportRuleUsed("7");
-    literal();
+    literal(tabs);
   }
 
   lex->ReportFunctionExited("Stmt", token);
   return errors;
 }
 
-int SyntacticalAnalyzer::stmt_list()
+int SyntacticalAnalyzer::stmt_list(int tabs)
 {
   lex->ReportFunctionEntered("Stmt_List", token);
 
@@ -631,14 +635,14 @@ int SyntacticalAnalyzer::stmt_list()
   }
   // applying rule 5
   lex->ReportRuleUsed("5");
-  stmt();
-  stmt_list();
+  stmt(tabs);
+  stmt_list(tabs);
 
   lex->ReportFunctionExited("Stmt_List", token);
   return errors;
 }
 
-int SyntacticalAnalyzer::define()
+int SyntacticalAnalyzer::define(int tabs)
 {
   lex->ReportFunctionEntered("Define", token);
 
@@ -652,13 +656,19 @@ int SyntacticalAnalyzer::define()
       token = lex->GetToken();
       if (token == IDENT_T)
       {
+	code -> WriteCode(tabs, "def " + lex->GetLexeme() + "(");
         token = lex->GetToken();
-        param_list();
+        param_list(tabs);
         if (token == RPAREN_T)
         {
+	  code -> WriteCode(tabs, "): \n");
+	  tabs++;
           token = lex->GetToken();
-          stmt();
-          stmt_list();
+          stmt(tabs);
+	  code -> WriteCode(tabs, "\n");
+          stmt_list(tabs);
+	  code -> WriteCode(tabs, "\n");
+	  tabs--;
           if (token == RPAREN_T)
             token = lex->GetToken();
           else
@@ -695,7 +705,7 @@ int SyntacticalAnalyzer::define()
   return errors;
 }
 
-int SyntacticalAnalyzer::more_defines()
+int SyntacticalAnalyzer::more_defines(int tabs)
 {
   lex->ReportFunctionEntered("More_Defines", token);
 
@@ -704,7 +714,7 @@ int SyntacticalAnalyzer::more_defines()
     // applying rule 3
     lex->ReportRuleUsed("3");
     token = lex->GetToken();
-    stmt_list();
+    stmt_list(tabs);
     if (token == RPAREN_T)
     {
       token = lex->GetToken();
@@ -719,11 +729,11 @@ int SyntacticalAnalyzer::more_defines()
   {
     // applying rule 2
     lex->ReportRuleUsed("2");
-    define();
+    define(tabs);
     if (token == LPAREN_T)
     {
       token = lex->GetToken();
-      more_defines();
+      more_defines(tabs);
     }
     else
     {
@@ -736,7 +746,7 @@ int SyntacticalAnalyzer::more_defines()
   return errors;
 }
 
-int SyntacticalAnalyzer::program()
+int SyntacticalAnalyzer::program(int tabs)
 {
   lex->ReportFunctionEntered("Program", token);
 
@@ -745,11 +755,11 @@ int SyntacticalAnalyzer::program()
     // applying rule 1
     lex->ReportRuleUsed("1");
     token = lex->GetToken();
-    define();
+    define(tabs);
     if (token == LPAREN_T)
     {
       token = lex->GetToken();
-      more_defines();
+      more_defines(tabs);
       if (token == EOF_T)
       {
         lex->ReportFunctionExited("Program", token);

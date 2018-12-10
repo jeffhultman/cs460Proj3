@@ -16,6 +16,10 @@ SyntacticalAnalyzer.o : SyntacticalAnalyzer.cpp SyntacticalAnalyzer.h LexicalAna
 CodeGenerator.o : CodeGenerator.cpp CodeGenerator.h LexicalAnalyzer.h
 	g++ -g -c CodeGenerator.cpp
 
+run:
+	./P2.out P3T3-1.ss
+	more P3T3-1.py
+
 clean : 
 	rm *.o P2.out *.gch *~ *.p2 *.lst *.dbg
 
