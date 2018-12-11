@@ -4,7 +4,12 @@ from objectFunctionality import *
 
 def main(): 
 	
-	
+	else:
+		123	123	
+	" "		
+	456	
+	789		
+	2	3	3	2	4	2	2	3	10	3	4.234	4	3
 def func2(a, b, c, gy, vg, gb, hb, hj, n): 
 	
-	
+	"     "
