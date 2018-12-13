@@ -295,7 +295,7 @@ int SyntacticalAnalyzer::action(int tabs)
       else if (token == LISTOP_T)
 	{
 	  lex->ReportRuleUsed("26");
-	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
+	  code -> WriteCode(tabs, "listop("+lex->GetLexeme() + ",");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
 	  code -> WriteCode(0, ") ");
@@ -1040,8 +1040,10 @@ int SyntacticalAnalyzer::more_defines(int tabs)
   {
     // applying rule 3
     lex->ReportRuleUsed("3");
+    code -> WriteCode(tabs, lex->GetLexeme()+"(");
     token = lex->GetToken();
     stmt_list(tabs, "");
+    code->WriteCode(0,")");
     if (token == RPAREN_T)
     {
       token = lex->GetToken();

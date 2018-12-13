@@ -26,3 +26,4 @@ def func2():
 	print(	" 'list? zero? null? string? + ") 	
 	print('')	
 
+main()
