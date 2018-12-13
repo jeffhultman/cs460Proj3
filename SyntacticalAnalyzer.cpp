@@ -359,8 +359,10 @@ int SyntacticalAnalyzer::action(int tabs)
       else if (token == ROUND_T)
 	{
 	  lex->ReportRuleUsed("41");
+	  code -> WriteCode(tabs, "round(");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       
       else if (token == DISPLAY_T)
@@ -626,8 +628,10 @@ int SyntacticalAnalyzer::action(int tabs)
       else if (token == ROUND_T)
 	{
 	  lex->ReportRuleUsed("41");
+	  code -> WriteCode(tabs, "round(");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       
       else if (token == DISPLAY_T)
