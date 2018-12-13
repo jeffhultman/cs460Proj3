@@ -1188,7 +1188,7 @@ int SyntacticalAnalyzer::more_defines(int tabs)
     code -> WriteCode(tabs, lex->GetLexeme()+"(");
     token = lex->GetToken();
     stmt_list(tabs, "");
-    code->WriteCode(0,")");
+    code->WriteCode(0,")\n");
     if (token == RPAREN_T)
     {
       token = lex->GetToken();
