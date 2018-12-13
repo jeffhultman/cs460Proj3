@@ -485,12 +485,242 @@ int SyntacticalAnalyzer::action(int tabs)
 	  token = lex->GetToken();
 	}
       code -> WriteCode(tabs, "\n");
+      flag = 0;
 
       lex->ReportFunctionExited("Action", token);
       return errors;
     }
   else
     {
+      if (token == IF_T)
+	{
+	  // applying rule 24
+	  lex->ReportRuleUsed("24");
+	  code -> WriteCode(tabs, lex->GetLexeme()+ " ");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(0, ":\n");
+	  tabs++;
+	  stmt(tabs, "");
+	  tabs--;
+	  else_part(tabs);
+	  code -> WriteCode(0, "\n");
+	}
+      else if (token == COND_T)
+	{
+	  // applying rule 25
+	  lex->ReportRuleUsed("25");
+	  code -> WriteCode(tabs, "if ");
+	  token = lex->GetToken();
+	  if (token == LPAREN_T)
+	    {
+	      token = lex->GetToken();
+	      tabs++;
+	      stmt_pair_body(tabs);
+	      tabs--;
+	      code -> WriteCode(0, "\n");
+	    }
+	  else
+	    {
+	      lex->ReportError("'LPAREN_T' expected");
+	      errors++;
+	    }
+	}
+      else if (token == LISTOP_T)
+	{
+	  lex->ReportRuleUsed("26");
+	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(0, ") ");
+	}
+      else if (token == NOT_T)
+	{
+	  lex->ReportRuleUsed("30");
+	  code -> WriteCode(tabs, lex->GetLexeme() + " ");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	}
+
+      else if (token == NUMBERP_T)
+	{
+	  lex->ReportRuleUsed("31");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	}
+      else if (token == LISTP_T)
+	{
+	  lex->ReportRuleUsed("32");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	}
+      else if (token == ZEROP_T)
+	{
+	  lex->ReportRuleUsed("33");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	}
+      else if (token == NULLP_T)
+	{
+	  lex->ReportRuleUsed("34");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	}
+      else if (token == STRINGP_T)
+	{
+	  lex->ReportRuleUsed("35");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	}
+      else if (token == ROUND_T)
+	{
+	  lex->ReportRuleUsed("41");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	}
+      
+      else if (token == DISPLAY_T)
+	{
+	  lex->ReportRuleUsed("48");
+	  code -> WriteCode(tabs, "print(");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(0, ") ");
+	}
+      else if (token == CONS_T)
+	{
+	  // applying rule 27
+	  lex->ReportRuleUsed("27");
+	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  stmt(tabs, "");
+	  code -> WriteCode(0, ")");
+	}
+      else if (token == MODULO_T)
+	{
+	  // applying rule 40
+	  lex->ReportRuleUsed("40");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(0, "%");
+	  stmt(tabs, "%");
+	}
+      else if (token == AND_T)
+	{
+	  lex->ReportRuleUsed("28");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(tabs, " and ");
+	  stmt_list(tabs, "and");
+	}
+      else if (token == OR_T)
+	{
+	  lex->ReportRuleUsed("29");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(tabs, " and ");
+	  stmt_list(tabs, "and");
+	}
+      
+      else if (token == PLUS_T)
+	{
+	  lex->ReportRuleUsed("36");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(tabs, "+");
+	  stmt_list(tabs, "+");
+	}
+
+      else if (token == MULT_T)
+	{
+	  lex->ReportRuleUsed("39");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(tabs, "*");
+	  stmt_list(tabs, "*");
+	}
+      else if (token == EQUALTO_T)
+	{
+	  lex->ReportRuleUsed("42");
+	  token = lex->GetToken();
+	  stmt(tabs,"");
+	  code -> WriteCode(tabs, "==");
+	  stmt_list(tabs, "==");
+	}
+      else if (token == GT_T)
+	{
+	  lex->ReportRuleUsed("43");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ">");
+	  stmt_list(tabs, ">");
+	}
+      else if (token == LT_T)
+	{
+	  lex->ReportRuleUsed("44");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(tabs, "<");
+	  stmt_list(tabs, "<");
+	}
+      else if (token == GTE_T)
+	{
+	  lex->ReportRuleUsed("45");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ">=");
+	  stmt_list(tabs, ">=");
+	}
+      else if (token == LTE_T)
+	{
+	  lex->ReportRuleUsed("46");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(0, "<=");
+	  stmt_list(0, "<=");
+	}
+      else if (token == IDENT_T)
+	{
+	  lex->ReportRuleUsed("47");
+	  code -> WriteCode(tabs, lex->GetLexeme());
+	  token = lex->GetToken();
+	  stmt_list(tabs, "");
+	}
+      else if (token == MINUS_T)
+	{
+	  // applying rules 37
+	  lex->ReportRuleUsed("37");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(tabs, "-");
+	  stmt_list(0, "-");
+	}
+      
+      else if(token == DIV_T)
+	{
+	  lex->ReportRuleUsed("38");
+	  token = lex->GetToken();
+	  stmt(tabs, "");
+	  code -> WriteCode(tabs, "/");
+	  stmt_list(0, "/");
+	}
+      else if (token == NEWLINE_T)
+	{
+	  // applying rule 49
+	  lex->ReportRuleUsed("49");
+	  code -> WriteCode(tabs, "print('')");
+	  token = lex->GetToken();
+	}
+      else
+	{
+	  lex->ReportError("'" + lex->GetLexeme() + "' unexpected");
+	  errors++;
+	  token = lex->GetToken();
+	}
+
+      lex->ReportFunctionExited("Action", token);
+      return errors;
     }
 }
 
