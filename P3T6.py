@@ -5,14 +5,14 @@ from objectFunctionality import *
 def even_copy(ls): 
 	
 	if 	ls:
-		if 			ls			
+		if 		ls		
 			" "
 
-			cdr(			ls) 			
+		if 		cdr(		ls) 		
 			" "
 
-			else:
-				cons(				car(				cdr(				ls) ) 				even_copy				cddr(				ls) )
+		else:
+			cons(			car(			cdr(			ls) ) 			even_copy			cddr(			ls) )
 
 ':
 		"even_copy_requires_a_list_argument"
@@ -25,8 +25,8 @@ def list_sum(ls):
 		if 		ls:
 			0(:
 			if 			car(			ls) :
-				car(				ls) 				+				list_sum				cdr(				ls) (:
-				0				+				list_sum				cdr(				ls) 
+				car(				ls) +list_sumcdr(ls) (:
+				0+list_sumcdr(ls) 
 
 
 
