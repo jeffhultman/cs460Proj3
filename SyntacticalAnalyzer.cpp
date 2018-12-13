@@ -422,8 +422,8 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("39");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
-	  code -> WriteCode(tabs, "*");
-	  stmt_list(tabs, "*");
+	  code -> WriteCode(0, "*");
+	  stmt_list(0, "*");
 	}
       else if (token == EQUALTO_T)
 	{
@@ -689,8 +689,8 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("39");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
-	  code -> WriteCode(tabs, "*");
-	  stmt_list(tabs, "*");
+	  code -> WriteCode(0, "*");
+	  stmt_list(0, "*");
 	}
       else if (token == EQUALTO_T)
 	{
@@ -818,8 +818,8 @@ int SyntacticalAnalyzer::stmt_pair_body(int tabs)
     lex->ReportRuleUsed("22");
     code -> WriteCode(tabs, "if ");
     stmt(0, "");
-    code -> WriteCode(0,":");
-    code -> WriteCode(0, "\n");
+    code -> WriteCode(0, ":\n");
+
     tabs++;
     stmt(tabs, "");
     tabs--;
@@ -948,7 +948,7 @@ int SyntacticalAnalyzer::quoted_lit(int tabs)
 int SyntacticalAnalyzer::literal(int tabs)
 {
   lex->ReportFunctionEntered("Literal", token);
-
+  int listFlag = 0;
   if (token == NUMLIT_T)
   {
     // applying rule 10
@@ -967,10 +967,19 @@ int SyntacticalAnalyzer::literal(int tabs)
   {
     // applying rule 12
     lex->ReportRuleUsed("12");
-    code -> WriteCode(tabs, "\"");
     token = lex->GetToken();
+    if (token == LPAREN_T)
+    {
+      listFlag++;
+      code -> WriteCode(tabs, "[");
+    }
+    else
+      code -> WriteCode(tabs, "\"");
     quoted_lit(tabs);
-    code -> WriteCode(0, "\"");
+    if (listFlag)
+      code -> WriteCode(0, "]");
+    else
+      code -> WriteCode(0, "\"");
   }
   else
   {
