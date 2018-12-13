@@ -818,6 +818,7 @@ int SyntacticalAnalyzer::stmt_pair_body(int tabs)
     lex->ReportRuleUsed("22");
     code -> WriteCode(tabs, "if ");
     stmt(0, "");
+    code -> WriteCode(0,":");
     code -> WriteCode(0, "\n");
     tabs++;
     stmt(tabs, "");
@@ -829,6 +830,7 @@ int SyntacticalAnalyzer::stmt_pair_body(int tabs)
       lex->ReportError("'RPAREN_T' expected");
       errors++;
     }
+
     code -> WriteCode(0, "\n");
     stmt_pair(tabs);
   }
