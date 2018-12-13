@@ -10,10 +10,10 @@ def main():
 		123
 
 	
-	if 	123	
+	if 123
 		" number? "
 
-	if 	456	
+	if 456
 		789
 
 	

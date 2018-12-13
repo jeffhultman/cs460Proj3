@@ -318,32 +318,42 @@ int SyntacticalAnalyzer::action(int tabs)
       else if (token == NUMBERP_T)
 	{
 	  lex->ReportRuleUsed("31");
+	  code -> WriteCode(tabs, "numberp(");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs,") ");
 	}
       else if (token == LISTP_T)
 	{
 	  lex->ReportRuleUsed("32");
 	  token = lex->GetToken();
+	  code -> WriteCode(tabs, "listp(");
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ") ");
 	}
       else if (token == ZEROP_T)
 	{
 	  lex->ReportRuleUsed("33");
 	  token = lex->GetToken();
+	  code -> WriteCode(tabs, "zerop(");
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       else if (token == NULLP_T)
 	{
 	  lex->ReportRuleUsed("34");
 	  token = lex->GetToken();
+	  code -> WriteCode(tabs, "nullp(");
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       else if (token == STRINGP_T)
 	{
 	  lex->ReportRuleUsed("35");
 	  token = lex->GetToken();
+	  code -> WriteCode(tabs, "stringp(");
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       else if (token == ROUND_T)
 	{
@@ -572,31 +582,41 @@ int SyntacticalAnalyzer::action(int tabs)
 	{
 	  lex->ReportRuleUsed("31");
 	  token = lex->GetToken();
+	  code -> WriteCode(tabs, "numberp(");
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       else if (token == LISTP_T)
 	{
 	  lex->ReportRuleUsed("32");
 	  token = lex->GetToken();
+	  code -> WriteCode(tabs, "listp(");
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       else if (token == ZEROP_T)
 	{
 	  lex->ReportRuleUsed("33");
 	  token = lex->GetToken();
+	  code -> WriteCode(tabs, "zerop(");
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       else if (token == NULLP_T)
 	{
 	  lex->ReportRuleUsed("34");
 	  token = lex->GetToken();
+	  code -> WriteCode(tabs, "nullp(");
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       else if (token == STRINGP_T)
 	{
 	  lex->ReportRuleUsed("35");
 	  token = lex->GetToken();
+	  code -> WriteCode(tabs, "stringp(");
 	  stmt(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       else if (token == ROUND_T)
 	{
@@ -789,8 +809,8 @@ int SyntacticalAnalyzer::stmt_pair_body(int tabs)
     // applying rule 22
     lex->ReportRuleUsed("22");
     code -> WriteCode(tabs, "if ");
-    stmt(tabs, "");
-    code -> WriteCode(tabs, "\n");
+    stmt(0, "");
+    code -> WriteCode(0, "\n");
     tabs++;
     stmt(tabs, "");
     tabs--;
