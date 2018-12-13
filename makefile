@@ -17,6 +17,15 @@ CodeGenerator.o : CodeGenerator.cpp CodeGenerator.h LexicalAnalyzer.h
 	g++ -g -c CodeGenerator.cpp
 
 run:
+	cat P3T5.ss
+	./P2.out P3T5.ss
+	cat P3T5.py
+run1:
+	cat P3T6.ss
+	./P2.out P3T6.ss
+	cat P3T6.py
+
+test:
 	./P2.out P3T3-1.ss
 	more P3T3-1.py
 
