@@ -30,7 +30,7 @@ test:
 	more P3T3-1.py
 
 clean : 
-	rm *.o P2.out *.gch *~ *.p2 *.lst *.dbg
+	rm *.o P2.out *.gch *~ *.p2 *.lst *.dbg rm P3T*.py
 
 submit : Project2.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp makefile README.txt
 	rm -rf TeamYP2

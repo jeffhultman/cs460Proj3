@@ -264,7 +264,7 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("24");
 	  code -> WriteCode(tabs, lex->GetLexeme()+ " ");
 	  token = lex->GetToken();
-	  stmt(tabs, "");
+	  stmt(0, "");
 	  code -> WriteCode(0, ":\n");
 	  tabs++;
 	  stmt(tabs, "");
@@ -527,7 +527,7 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("24");
 	  code -> WriteCode(tabs, lex->GetLexeme()+ " ");
 	  token = lex->GetToken();
-	  stmt(tabs, "");
+	  stmt(0, "");
 	  code -> WriteCode(0, ":\n");
 	  tabs++;
 	  stmt(tabs, "");
