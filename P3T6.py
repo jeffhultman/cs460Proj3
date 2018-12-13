@@ -4,11 +4,11 @@ from objectFunctionality import *
 
 def even_copy(ls): 
 	
-	if 	ls:
-		if 		ls		
+	if listp(ls):
+		if nullp(ls)
 			" "
 
-		if 		cdr(		ls) 		
+		if nullp(cdr(ls) )
 			" "
 
 		else:
@@ -21,10 +21,10 @@ def even_copy(ls):
 
 def list_sum(ls): 
 	
-	if 	ls:
-		if 		ls:
+	if listp(ls):
+		if nullp(ls):
 			0(:
-			if 			car(			ls) :
+			if numberp(car(ls) ):
 				car(				ls) +list_sumcdr(ls) (:
 				0+list_sumcdr(ls) 
 

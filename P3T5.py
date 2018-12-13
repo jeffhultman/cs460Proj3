@@ -4,7 +4,7 @@ from objectFunctionality import *
 
 def square(n): 
 	
-	if 	n:
+	if 	numberp(	n	):
 		n		*		n':
 		"invalid_parameter"
 
@@ -12,8 +12,8 @@ def square(n):
 
 def reciprocal(n): 
 	
-	if 	n	 and 	not 	n	==	0:
-		1		/n':
+	if 	numberp(	n	) and not (n)==(0):
+		1/n':
 		"invalid_parameter"
 
 	
