@@ -4,14 +4,16 @@ from objectFunctionality import *
 
 def main(): 
 	
-	if 		else:
-			123
+	if (0):
+		0
+	else:
+		123
 
 	
-	if 		123		
+	if 	123	
 		" number? "
 
-		456		
+	if 	456	
 		789
 
 	
