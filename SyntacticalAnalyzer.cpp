@@ -378,6 +378,7 @@ int SyntacticalAnalyzer::action(int tabs)
 	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
 	  token = lex->GetToken();
 	  stmt(0, "");
+    code -> WriteCode(0, ",");
 	  stmt(0, "");
 	  code -> WriteCode(0, ")");
 	}
@@ -644,6 +645,7 @@ int SyntacticalAnalyzer::action(int tabs)
 	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
 	  token = lex->GetToken();
 	  stmt(0, "");
+    code -> WriteCode(0, ",");
 	  stmt(0, "");
 	  code -> WriteCode(0, ")");
 	}
