@@ -1038,13 +1038,8 @@ int SyntacticalAnalyzer::literal(int tabs, string ret)
       code -> WriteCode(tabs, "[");
     }
     else
-<<<<<<< HEAD
-      code -> WriteCode(tabs, "\"");
-    quoted_lit(tabs, ret);
-=======
       code -> WriteCode(tabs, "");
-    quoted_lit(tabs);
->>>>>>> eb0273beca3e384b5927c91557ee85f41f40493b
+    quoted_lit(tabs, ret);
     if (listFlag)
       code -> WriteCode(0, "]");
     else
@@ -1141,21 +1136,12 @@ int SyntacticalAnalyzer::define(int tabs)
           code -> WriteCode(0, "): \n");
           tabs++;
           token = lex->GetToken();
-<<<<<<< HEAD
 	  code -> WriteCode(tabs, "\n");
           stmt(tabs, "", ret);
 	  //code -> WriteCode(tabs, "\n");
           stmt_list(tabs, "", ret);
 	  //code -> WriteCode(tabs, "\n");
 	  tabs--;
-=======
-	        code -> WriteCode(0, "\n");
-          stmt(tabs);
-	        //code -> WriteCode(tabs, "\n");
-          stmt_list(tabs);
-	        //code -> WriteCode(tabs, "\n");
-	        tabs--;
->>>>>>> 23dd0e703a4c7c692e828aa7d8c288377f217053
           if (token == RPAREN_T)
           {
             token = lex->GetToken();
@@ -1189,12 +1175,7 @@ int SyntacticalAnalyzer::define(int tabs)
     lex->ReportError("'DEFINE_T' expected");
     errors++;
   }
-
-<<<<<<< HEAD
   code -> WriteCode(tabs + 1, "return\n");
-=======
-  code -> WriteCode(0, "\n");
->>>>>>> 23dd0e703a4c7c692e828aa7d8c288377f217053
   lex->ReportFunctionExited("Define", token);
   return errors;
 }
@@ -1210,19 +1191,10 @@ int SyntacticalAnalyzer::more_defines(int tabs)
     lex->ReportRuleUsed("3");
     code -> WriteCode(tabs, lex->GetLexeme()+"(");
     token = lex->GetToken();
-<<<<<<< HEAD
-<<<<<<< HEAD
     stmt_list(tabs, "", ret);
     code->WriteCode(0,")");
-=======
-    
-    stmt_list(tabs);
-    code -> WriteCode(tabs, ")\n");
->>>>>>> 23dd0e703a4c7c692e828aa7d8c288377f217053
-=======
-    stmt_list(tabs, "");
+    stmt_list(tabs, "", ret);
     code->WriteCode(0,")\n");
->>>>>>> eb0273beca3e384b5927c91557ee85f41f40493b
     if (token == RPAREN_T)
     {
       token = lex->GetToken();
