@@ -5,10 +5,10 @@ from objectFunctionality import *
 def even_copy(ls): 
 	
 	if listp(ls):
-		if nullp(ls)
+		if nullp(ls):
 			" "
 
-		if nullp(listop('cdr',ls) )
+		if nullp(listop('cdr',ls) ):
 			" "
 
 		else:

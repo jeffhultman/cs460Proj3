@@ -421,8 +421,8 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("39");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
-	  code -> WriteCode(tabs, "*");
-	  stmt_list(tabs, "*");
+	  code -> WriteCode(0, "*");
+	  stmt_list(0, "*");
 	}
       else if (token == EQUALTO_T)
 	{
@@ -687,8 +687,8 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("39");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
-	  code -> WriteCode(tabs, "*");
-	  stmt_list(tabs, "*");
+	  code -> WriteCode(0, "*");
+	  stmt_list(0, "*");
 	}
       else if (token == EQUALTO_T)
 	{
@@ -816,7 +816,7 @@ int SyntacticalAnalyzer::stmt_pair_body(int tabs)
     lex->ReportRuleUsed("22");
     code -> WriteCode(tabs, "if ");
     stmt(0, "");
-    code -> WriteCode(0, "\n");
+    code -> WriteCode(0, ":\n");
     tabs++;
     stmt(tabs, "");
     tabs--;
