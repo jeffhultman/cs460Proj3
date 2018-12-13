@@ -823,6 +823,7 @@ int SyntacticalAnalyzer::stmt_pair_body(int tabs)
     code -> WriteCode(tabs, "if ");
     stmt(0, "");
     code -> WriteCode(0, ":\n");
+
     tabs++;
     stmt(tabs, "");
     tabs--;
@@ -833,6 +834,7 @@ int SyntacticalAnalyzer::stmt_pair_body(int tabs)
       lex->ReportError("'RPAREN_T' expected");
       errors++;
     }
+
     code -> WriteCode(0, "\n");
     stmt_pair(tabs);
   }
@@ -950,7 +952,7 @@ int SyntacticalAnalyzer::quoted_lit(int tabs)
 int SyntacticalAnalyzer::literal(int tabs)
 {
   lex->ReportFunctionEntered("Literal", token);
-
+  int listFlag = 0;
   if (token == NUMLIT_T)
   {
     // applying rule 10
@@ -969,10 +971,19 @@ int SyntacticalAnalyzer::literal(int tabs)
   {
     // applying rule 12
     lex->ReportRuleUsed("12");
-    code -> WriteCode(tabs, "\"");
     token = lex->GetToken();
+    if (token == LPAREN_T)
+    {
+      listFlag++;
+      code -> WriteCode(tabs, "[");
+    }
+    else
+      code -> WriteCode(tabs, "\"");
     quoted_lit(tabs);
-    code -> WriteCode(0, "\"");
+    if (listFlag)
+      code -> WriteCode(0, "]");
+    else
+      code -> WriteCode(0, "\"");
   }
   else
   {
