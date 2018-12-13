@@ -21,13 +21,13 @@ class SyntacticalAnalyzer
 	int action(int tabs);
 	int stmt_pair_body(int tabs);
 	int stmt_pair(int tabs);
-	int stmt(int tabs);
+	int stmt(int tabs, string act);
 	int else_part(int tabs);
 	int param_list(int tabs);
 	int more_tokens(int tabs);
 	int quoted_lit(int tabs);
 	int literal(int tabs);
-	int stmt_list(int tabs);
+	int stmt_list(int tabs, string act);
 	int define(int tabs);
 	int more_defines(int tabs);
 	int program(int tabs);
@@ -36,6 +36,7 @@ class SyntacticalAnalyzer
 	token_type token;
 	int errors;
 	CodeGen * code;
+	int flag = 0;
 };
 	
 #endif
