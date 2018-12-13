@@ -269,6 +269,7 @@ int SyntacticalAnalyzer::action(int tabs)
 	  tabs++;
 	  stmt(tabs, "");
 	  tabs--;
+	  code -> WriteCode(0, "\n");
 	  else_part(tabs);
 	  code -> WriteCode(0, "\n");
 	}
@@ -532,6 +533,7 @@ int SyntacticalAnalyzer::action(int tabs)
 	  tabs++;
 	  stmt(tabs, "");
 	  tabs--;
+	  code -> WriteCode(0, "\n");
 	  else_part(tabs);
 	  code -> WriteCode(0, "\n");
 	}
@@ -866,7 +868,8 @@ int SyntacticalAnalyzer::else_part(int tabs)
   }
   // applying rule 18
   lex->ReportRuleUsed("18");
-  code -> WriteCode(0, lex->GetLexeme() + ":\n");
+  
+  code -> WriteCode(tabs, "else:\n");
   tabs++;
   stmt(tabs, "");
   tabs--;
