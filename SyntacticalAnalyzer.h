@@ -17,17 +17,17 @@ class SyntacticalAnalyzer
     public:
 	SyntacticalAnalyzer (char * filename);
 	~SyntacticalAnalyzer ();
-	int any_other_token(int tabs);
-	int action(int tabs);
-	int stmt_pair_body(int tabs);
-	int stmt_pair(int tabs);
-	int stmt(int tabs, string act);
-	int else_part(int tabs);
-	int param_list(int tabs);
-	int more_tokens(int tabs);
-	int quoted_lit(int tabs);
-	int literal(int tabs);
-	int stmt_list(int tabs, string act);
+	int any_other_token(int tabs, string ret);
+	int action(int tabs, string ret);
+	int stmt_pair_body(int tabs, string ret);
+	int stmt_pair(int tabs, string ret);
+	int stmt(int tabs, string act, string ret);
+	int else_part(int tabs, string ret);
+	int param_list(int tabs, string ret);
+	int more_tokens(int tabs, string ret);
+	int quoted_lit(int tabs, string ret);
+	int literal(int tabs, string ret);
+	int stmt_list(int tabs, string act, string ret);
 	int define(int tabs);
 	int more_defines(int tabs);
 	int program(int tabs);
