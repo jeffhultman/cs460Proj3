@@ -26,8 +26,9 @@ run1:
 	cat P3T6.py
 
 test:
+	cat P3T3-1.ss
 	./P2.out P3T3-1.ss
-	more P3T3-1.py
+	cat P3T3-1.py
 
 clean : 
 	rm *.o P2.out *.gch *~ *.p2 *.lst *.dbg rm P3T*.py
