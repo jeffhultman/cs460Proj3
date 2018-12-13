@@ -565,9 +565,9 @@ int SyntacticalAnalyzer::action(int tabs)
       else if (token == LISTOP_T)
 	{
 	  lex->ReportRuleUsed("26");
-	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
+	  code -> WriteCode(tabs, "listop("+lex->GetLexeme() + ",");
 	  token = lex->GetToken();
-	  stmt(tabs, "");
+	  stmt(0, "");
 	  code -> WriteCode(0, ") ");
 	}
       else if (token == NOT_T)
