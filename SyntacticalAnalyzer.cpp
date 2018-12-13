@@ -1,5 +1,5 @@
 // CS460 Project 2
-// Authors: Justin Bernard, Catherine Meyer, Jimmie Hagle
+// Authors: Jimmie Hagle, Boaz Cogan, Justin Bernard
 
 
 #include <iostream>
@@ -956,7 +956,7 @@ int SyntacticalAnalyzer::literal(int tabs, string ret)
   if (token == NUMLIT_T)
   {
     // applying rule 10
-    lex->ReportRuleUsed("10 ");
+    lex->ReportRuleUsed("10");
     code -> WriteCode(tabs, lex->GetLexeme());
     token = lex->GetToken();
   }
@@ -1068,22 +1068,33 @@ int SyntacticalAnalyzer::define(int tabs)
       token = lex->GetToken();
       if (token == IDENT_T)
       {
-	code -> WriteCode(tabs, "def " + lex->GetLexeme() + "(");
+	      code -> WriteCode(tabs, "def " + lex->GetLexeme() + "(");
         token = lex->GetToken();
         param_list(tabs, ret);
         if (token == RPAREN_T)
         {
-	  code -> WriteCode(tabs, "): \n");
-	  tabs++;
+          code -> WriteCode(0, "): \n");
+          tabs++;
           token = lex->GetToken();
+<<<<<<< HEAD
 	  code -> WriteCode(tabs, "\n");
           stmt(tabs, "", ret);
 	  //code -> WriteCode(tabs, "\n");
           stmt_list(tabs, "", ret);
 	  //code -> WriteCode(tabs, "\n");
 	  tabs--;
+=======
+	        code -> WriteCode(0, "\n");
+          stmt(tabs);
+	        //code -> WriteCode(tabs, "\n");
+          stmt_list(tabs);
+	        //code -> WriteCode(tabs, "\n");
+	        tabs--;
+>>>>>>> 23dd0e703a4c7c692e828aa7d8c288377f217053
           if (token == RPAREN_T)
+          {
             token = lex->GetToken();
+          }
           else
           {
             lex->ReportError("'RPAREN_T' expected");
@@ -1114,7 +1125,11 @@ int SyntacticalAnalyzer::define(int tabs)
     errors++;
   }
 
+<<<<<<< HEAD
   code -> WriteCode(tabs + 1, "return\n");
+=======
+  code -> WriteCode(0, "\n");
+>>>>>>> 23dd0e703a4c7c692e828aa7d8c288377f217053
   lex->ReportFunctionExited("Define", token);
   return errors;
 }
@@ -1130,8 +1145,14 @@ int SyntacticalAnalyzer::more_defines(int tabs)
     lex->ReportRuleUsed("3");
     code -> WriteCode(tabs, lex->GetLexeme()+"(");
     token = lex->GetToken();
+<<<<<<< HEAD
     stmt_list(tabs, "", ret);
     code->WriteCode(0,")");
+=======
+    
+    stmt_list(tabs);
+    code -> WriteCode(tabs, ")\n");
+>>>>>>> 23dd0e703a4c7c692e828aa7d8c288377f217053
     if (token == RPAREN_T)
     {
       token = lex->GetToken();
