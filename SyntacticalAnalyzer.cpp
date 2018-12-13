@@ -377,8 +377,8 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("27");
 	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
 	  token = lex->GetToken();
-	  stmt(tabs, "");
-	  stmt(tabs, "");
+	  stmt(0, "");
+	  stmt(0, "");
 	  code -> WriteCode(0, ")");
 	}
       else if (token == MODULO_T)
@@ -641,8 +641,8 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("27");
 	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
 	  token = lex->GetToken();
-	  stmt(tabs, "");
-	  stmt(tabs, "");
+	  stmt(0, "");
+	  stmt(0, "");
 	  code -> WriteCode(0, ")");
 	}
       else if (token == MODULO_T)
