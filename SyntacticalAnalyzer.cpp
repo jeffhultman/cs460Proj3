@@ -1,5 +1,5 @@
 // CS460 Project 2
-// Authors: Justin Bernard, Catherine Meyer, Jimmie Hagle
+// Authors: Jimmie Hagle, Boaz Cogan, Justin Bernard
 
 
 #include <iostream>
@@ -572,7 +572,7 @@ int SyntacticalAnalyzer::literal(int tabs)
   if (token == NUMLIT_T)
   {
     // applying rule 10
-    lex->ReportRuleUsed("10 ");
+    lex->ReportRuleUsed("10");
     code -> WriteCode(tabs, lex->GetLexeme());
     token = lex->GetToken();
   }
@@ -673,22 +673,24 @@ int SyntacticalAnalyzer::define(int tabs)
       token = lex->GetToken();
       if (token == IDENT_T)
       {
-	code -> WriteCode(tabs, "def " + lex->GetLexeme() + "(");
+	      code -> WriteCode(tabs, "def " + lex->GetLexeme() + "(");
         token = lex->GetToken();
         param_list(tabs);
         if (token == RPAREN_T)
         {
-	  code -> WriteCode(tabs, "): \n");
-	  tabs++;
+          code -> WriteCode(0, "): \n");
+          tabs++;
           token = lex->GetToken();
-	  code -> WriteCode(tabs, "\n");
+	        code -> WriteCode(0, "\n");
           stmt(tabs);
-	  //code -> WriteCode(tabs, "\n");
+	        //code -> WriteCode(tabs, "\n");
           stmt_list(tabs);
-	  //code -> WriteCode(tabs, "\n");
-	  tabs--;
+	        //code -> WriteCode(tabs, "\n");
+	        tabs--;
           if (token == RPAREN_T)
+          {
             token = lex->GetToken();
+          }
           else
           {
             lex->ReportError("'RPAREN_T' expected");
@@ -719,7 +721,7 @@ int SyntacticalAnalyzer::define(int tabs)
     errors++;
   }
 
-  code -> WriteCode(tabs, "\n");
+  code -> WriteCode(0, "\n");
   lex->ReportFunctionExited("Define", token);
   return errors;
 }
@@ -732,8 +734,11 @@ int SyntacticalAnalyzer::more_defines(int tabs)
   {
     // applying rule 3
     lex->ReportRuleUsed("3");
+    code -> WriteCode(tabs, lex->GetLexeme()+"(");
     token = lex->GetToken();
+    
     stmt_list(tabs);
+    code -> WriteCode(tabs, ")\n");
     if (token == RPAREN_T)
     {
       token = lex->GetToken();
