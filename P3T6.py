@@ -12,7 +12,7 @@ def even_copy(ls):
 			" "
 
 		else:
-			cons(listop('car',listop('cdr',ls) ) even_copylistop('cddr',ls) )
+			cons(listop('car',listop('cdr',ls) ) even_copy(listop('cddr',ls) ))
 
 
 	else:
@@ -27,9 +27,9 @@ def list_sum(ls):
 			0
 		else:
 			if numberp(listop('car',ls) ):
-				listop('car',ls) +list_sumlistop('cdr',ls) 
+				listop('car',ls) +list_sum(listop('cdr',ls) )
 			else:
-				0+list_sumlistop('cdr',ls) 
+				0+list_sum(listop('cdr',ls) )
 
 
 

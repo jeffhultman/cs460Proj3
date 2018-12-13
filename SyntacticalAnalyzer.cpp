@@ -480,8 +480,10 @@ int SyntacticalAnalyzer::action(int tabs)
 	{
 	  lex->ReportRuleUsed("47");
 	  code -> WriteCode(tabs, lex->GetLexeme());
+	  code -> WriteCode(0, "(");
 	  token = lex->GetToken();
 	  stmt_list(tabs, "");
+	  code -> WriteCode(tabs, ")");
 	}
       else if (token == MINUS_T)
 	{
@@ -744,8 +746,10 @@ int SyntacticalAnalyzer::action(int tabs)
 	{
 	  lex->ReportRuleUsed("47");
 	  code -> WriteCode(tabs, lex->GetLexeme());
+	  code -> WriteCode(0, "(");
 	  token = lex->GetToken();
 	  stmt_list(tabs, "");
+	  code -> WriteCode(0, ")");
 	}
       else if (token == MINUS_T)
 	{
