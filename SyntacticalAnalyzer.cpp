@@ -370,23 +370,23 @@ int SyntacticalAnalyzer::action(int tabs)
 	  token = lex->GetToken();
 	  stmt(tabs, "");
 	  code -> WriteCode(0, "%");
-	  stmt(tabs, "%");
+	  stmt(0, "%");
 	}
       else if (token == AND_T)
 	{
 	  lex->ReportRuleUsed("28");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
-	  code -> WriteCode(tabs, " and ");
-	  stmt_list(tabs, "and");
+	  code -> WriteCode(0, " and ");
+	  stmt_list(0, "and");
 	}
       else if (token == OR_T)
 	{
 	  lex->ReportRuleUsed("29");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
-	  code -> WriteCode(tabs, " and ");
-	  stmt_list(tabs, "and");
+	  code -> WriteCode(0, " and ");
+	  stmt_list(0, "and");
 	}
       
       else if (token == PLUS_T)
@@ -394,8 +394,8 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("36");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
-	  code -> WriteCode(tabs, "+");
-	  stmt_list(tabs, "+");
+	  code -> WriteCode(0, "+");
+	  stmt_list(0, "+");
 	}
 
       else if (token == MULT_T)
@@ -410,41 +410,53 @@ int SyntacticalAnalyzer::action(int tabs)
 	{
 	  lex->ReportRuleUsed("42");
 	  token = lex->GetToken();
-	  stmt(tabs,"");
-	  code -> WriteCode(tabs, "==");
-	  stmt_list(tabs, "==");
+	  code -> WriteCode(tabs, "(");
+	  stmt(0,"");
+	  code -> WriteCode(0, ")");
+	  code -> WriteCode(0, "==(");
+	  stmt_list(0, "==");
+	  code -> WriteCode(0, ")");
 	}
       else if (token == GT_T)
 	{
 	  lex->ReportRuleUsed("43");
 	  token = lex->GetToken();
-	  stmt(tabs, "");
-	  code -> WriteCode(tabs, ">");
-	  stmt_list(tabs, ">");
+	  code -> WriteCode(tabs, "(");
+	  stmt(0, "");
+	  code -> WriteCode(0, ")>(");
+	  stmt_list(0, ">");
+	  code -> WriteCode(0, ")");
 	}
       else if (token == LT_T)
 	{
 	  lex->ReportRuleUsed("44");
 	  token = lex->GetToken();
-	  stmt(tabs, "");
-	  code -> WriteCode(tabs, "<");
-	  stmt_list(tabs, "<");
+	  code -> WriteCode(tabs, "(");
+	  stmt(0, "");
+	  code -> WriteCode(0, ")");
+	  code -> WriteCode(0, "<(");
+	  stmt_list(0, "<");
+	  code -> WriteCode(0, ")");
 	}
       else if (token == GTE_T)
 	{
 	  lex->ReportRuleUsed("45");
 	  token = lex->GetToken();
-	  stmt(tabs, "");
-	  code -> WriteCode(tabs, ">=");
-	  stmt_list(tabs, ">=");
+	  code -> WriteCode(tabs, "(");
+	  stmt(0, "");
+	  code -> WriteCode(0, ")>=(");
+	  stmt_list(0, ">=");
+	  code -> WriteCode(0, ")");
 	}
       else if (token == LTE_T)
 	{
 	  lex->ReportRuleUsed("46");
 	  token = lex->GetToken();
-	  stmt(tabs, "");
-	  code -> WriteCode(0, "<=");
+	  code -> WriteCode(tabs, "(");
+	  stmt(0, "");
+	  code -> WriteCode(0, ")<=(");
 	  stmt_list(0, "<=");
+	  code -> WriteCode(0, ")");
 	}
       else if (token == IDENT_T)
 	{
@@ -459,7 +471,7 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("37");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
-	  code -> WriteCode(tabs, "-");
+	  code -> WriteCode(0, "-");
 	  stmt_list(0, "-");
 	}
       
@@ -468,7 +480,7 @@ int SyntacticalAnalyzer::action(int tabs)
 	  lex->ReportRuleUsed("38");
 	  token = lex->GetToken();
 	  stmt(tabs, "");
-	  code -> WriteCode(tabs, "/");
+	  code -> WriteCode(0, "/");
 	  stmt_list(0, "/");
 	}
       else if (token == NEWLINE_T)
