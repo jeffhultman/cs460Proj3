@@ -33,15 +33,18 @@ test:
 clean : 
 	rm -f *.o P2.out *.gch *~ *.p2 *.lst *.dbg rm P3T*.py
 
-submit : Project2.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp makefile README.txt
+submit : Project2.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp CodeGenerator.cpp CodeGenerator.h objectFunctionality.py makefile README.txt
 	rm -rf T3P2py
 	mkdir T3P2py
-	cp Project2.cpp TeamYP2
-	cp LexicalAnalyzer.h TeamYP2
-	cp LexicalAnalyzer.cpp TeamYP2
-	cp SyntacticalAnalyzer.h TeamYP2
-	cp SyntacticalAnalyzer.cpp TeamYP2
-	cp makefile TeamYP2
-	cp README.txt TeamYP2
-	tar cfvz TeamYP2.tgz TeamYP2
-	cp TeamYP2.tgz ~tiawatts/cs460drop
+	cp CodeGenerator.cpp T3P2py
+	cp CodeGenerator.h T3P2py
+	cp objectFunctionality.py T3P2py
+	cp Project2.cpp T3P2py
+	cp LexicalAnalyzer.h T3P2py
+	cp LexicalAnalyzer.cpp T3P2py
+	cp SyntacticalAnalyzer.h T3P2py
+	cp SyntacticalAnalyzer.cpp T3P2py
+	cp makefile T3P2py
+	cp README.txt T3P2py
+	tar cfvz T3P2py.tgz T3P2py
+	cp T3P2py.tgz ~tiawatts/cs460drop
