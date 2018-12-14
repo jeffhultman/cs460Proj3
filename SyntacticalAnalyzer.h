@@ -37,6 +37,7 @@ class SyntacticalAnalyzer
 	int errors;
 	CodeGen * code;
 	int flag = 0;
+	int buildingStatement;
 };
 	
 #endif

@@ -16,6 +16,7 @@ SyntacticalAnalyzer::SyntacticalAnalyzer(char *filename)
   token = lex->GetToken();
   code = new CodeGen(filename);
   int tabs = 0;
+  buildingStatement=0;
   errors = program(tabs);
 }
 
@@ -321,11 +322,13 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
       if (token == IF_T)
 	{
 	  // applying rule 24
+    buildingStatement++;
 	  lex->ReportRuleUsed("24");
 	  code -> WriteCode(tabs, lex->GetLexeme()+ " ");
 	  token = lex->GetToken();
 	  stmt(0, "", ret);
 	  code -> WriteCode(0, ":\n");
+    buildingStatement--;
 	  tabs++;
 	  stmt(tabs, "", ret);
 	  tabs--;
@@ -341,17 +344,19 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  token = lex->GetToken();
 	  if (token == LPAREN_T)
 	    {
+        buildingStatement++;
 	      token = lex->GetToken();
 	      //tabs++;
 	      if (token == ELSE_T)
-		{
-		  code -> WriteCode(tabs, "if (0):\n");
-		  code -> WriteCode(tabs + 1, "0\n");
-		  stmt_pair_body(tabs, ret);
-		}
+        {
+          code -> WriteCode(tabs, "if (0):\n");
+          code -> WriteCode(tabs + 1, "0\n");
+          stmt_pair_body(tabs, ret);
+        }
 	      else
-		stmt_pair_body(tabs, ret);
+	      	stmt_pair_body(tabs, ret);
 	      //tabs--;
+        buildingStatement--;
 	      code -> WriteCode(0, "\n");
 	    }
 	  else
@@ -363,78 +368,137 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
       else if (token == LISTOP_T)
 	{
 	  lex->ReportRuleUsed("26");
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  code -> WriteCode(tabs, "listop('"+lex->GetLexeme() + "',");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, ") ");
+    buildingStatement--;
 	}
       else if (token == NOT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("30");
 	  code -> WriteCode(tabs, lex->GetLexeme() + " ");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
+    buildingStatement--;
 	}
 
       else if (token == NUMBERP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("31");
 	  code -> WriteCode(tabs, "numberp(");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs,") ");
+    buildingStatement--;
 	}
       else if (token == LISTP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("32");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "listp(");
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ") ");
+    buildingStatement--;
 	}
       else if (token == ZEROP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("33");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "zerop(");
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       else if (token == NULLP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("34");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "nullp(");
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       else if (token == STRINGP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("35");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "stringp(");
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       else if (token == ROUND_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("41");
 	  code -> WriteCode(tabs, "round(");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       
       else if (token == DISPLAY_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("48");
 	  code -> WriteCode(tabs, "print(");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, ") ");
+    buildingStatement--;
 	}
       else if (token == CONS_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  // applying rule 27
 	  lex->ReportRuleUsed("27");
 	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
@@ -443,52 +507,88 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, ",");
 	  stmt(0, "", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == MODULO_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  // applying rule 40
 	  lex->ReportRuleUsed("40");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "%");
 	  stmt(0, "%", ret);
+    buildingStatement--;
 	}
       else if (token == AND_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("28");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, " and ");
 	  stmt_list(0, "and", ret);
+    buildingStatement--;
 	}
       else if (token == OR_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("29");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, " or ");
 	  stmt_list(0, "or", ret);
+    buildingStatement--;
 	}
       
       else if (token == PLUS_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("36");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "+");
 	  stmt_list(0, "+", ret);
+    buildingStatement--;
 	}
 
       else if (token == MULT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("39");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "*");
 	  stmt_list(0, "*", ret);
+    buildingStatement--;
 	}
       else if (token == EQUALTO_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("42");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -497,9 +597,15 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, "==(");
 	  stmt_list(0, "==", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == GT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("43");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -507,9 +613,15 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, ")>(");
 	  stmt_list(0, ">", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == LT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("44");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -518,9 +630,15 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, "<(");
 	  stmt_list(0, "<", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == GTE_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("45");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -528,9 +646,15 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, ")>=(");
 	  stmt_list(0, ">=", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == LTE_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("46");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -538,40 +662,65 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, ")<=(");
 	  stmt_list(0, "<=", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == IDENT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("47");
 	  code -> WriteCode(tabs, lex->GetLexeme());
 	  code -> WriteCode(0, "(");
 	  token = lex->GetToken();
 	  stmt_list(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       else if (token == MINUS_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  // applying rules 37
 	  lex->ReportRuleUsed("37");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "-");
 	  stmt_list(0, "-", ret);
+    buildingStatement--;
 	}
       
       else if(token == DIV_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("38");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "/");
 	  stmt_list(0, "/", ret);
+    buildingStatement--;
 	}
       else if (token == NEWLINE_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  // applying rule 49
 	  lex->ReportRuleUsed("49");
 	  code -> WriteCode(tabs, "print('')");
 	  token = lex->GetToken();
+    buildingStatement--;
 	}
       else
 	{
@@ -589,12 +738,14 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
     {
       if (token == IF_T)
 	{
+    buildingStatement++;
 	  // applying rule 24
 	  lex->ReportRuleUsed("24");
 	  code -> WriteCode(tabs, lex->GetLexeme()+ " ");
 	  token = lex->GetToken();
 	  stmt(0, "", ret);
 	  code -> WriteCode(0, ":\n");
+    buildingStatement--;
 	  tabs++;
 	  stmt(tabs, "", ret);
 	  tabs--;
@@ -610,18 +761,20 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  token = lex->GetToken();
 	  if (token == LPAREN_T)
 	    {
+        buildingStatement++;
 	      token = lex->GetToken();
 	      //tabs++;
 	      if (token == ELSE_T)
-                {
-		  code -> WriteCode(tabs, "if (0):\n");
+        {
+		              code -> WriteCode(tabs, "if (0):\n");
                   code -> WriteCode(tabs + 1, "0\n");
                   stmt_pair_body(tabs, ret);
-                }
-              else
-		stmt_pair_body(tabs, ret);
+        }
+        else
+		        stmt_pair_body(tabs, ret);
 	      //tabs--;
 	      code -> WriteCode(0, "\n");
+        buildingStatement--;
 	    }
 	  else
 	    {
@@ -631,79 +784,138 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	}
       else if (token == LISTOP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("26");
 	  code -> WriteCode(tabs, "listop('"+lex->GetLexeme() + "',");
 	  token = lex->GetToken();
 	  stmt(0, "", ret);
 	  code -> WriteCode(0, ") ");
+    buildingStatement--;
 	}
       else if (token == NOT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("30");
 	  code -> WriteCode(tabs, lex->GetLexeme() + " ");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
+    buildingStatement--;
 	}
 
       else if (token == NUMBERP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("31");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "numberp(");
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       else if (token == LISTP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("32");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "listp(");
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       else if (token == ZEROP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("33");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "zerop(");
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       else if (token == NULLP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("34");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "nullp(");
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       else if (token == STRINGP_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("35");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "stringp(");
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       else if (token == ROUND_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("41");
 	  code -> WriteCode(tabs, "round(");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(tabs, ")");
+    buildingStatement--;
 	}
       
       else if (token == DISPLAY_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("48");
 	  code -> WriteCode(tabs, "print(");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, ") ");
+    buildingStatement--;
 	}
       else if (token == CONS_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  // applying rule 27
 	  lex->ReportRuleUsed("27");
 	  code -> WriteCode(tabs, lex->GetLexeme() + "(");
@@ -712,52 +924,88 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
     code -> WriteCode(0, ",");
 	  stmt(0, "", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == MODULO_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  // applying rule 40
 	  lex->ReportRuleUsed("40");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "%");
 	  stmt(0, "%", ret);
+    buildingStatement--;
 	}
       else if (token == AND_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("28");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, " and ");
 	  stmt_list(0, "and", ret);
+    buildingStatement--;
 	}
       else if (token == OR_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("29");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, " or ");
 	  stmt_list(0, "or", ret);
+    buildingStatement--;
 	}
       
       else if (token == PLUS_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("36");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "+");
 	  stmt_list(0, "+", ret);
+    buildingStatement--;
 	}
 
       else if (token == MULT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("39");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "*");
 	  stmt_list(0, "*", ret);
+    buildingStatement--;
 	}
       else if (token == EQUALTO_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("42");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -766,9 +1014,15 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, "==(");
 	  stmt_list(0, "==", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == GT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("43");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -776,9 +1030,15 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, ")>(");
 	  stmt_list(0, ">", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == LT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("44");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -787,9 +1047,15 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, "<(");
 	  stmt_list(0, "<", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == GTE_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("45");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -797,9 +1063,15 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, ")>=(");
 	  stmt_list(0, ">=", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == LTE_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("46");
 	  token = lex->GetToken();
 	  code -> WriteCode(tabs, "(");
@@ -807,40 +1079,65 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 	  code -> WriteCode(0, ")<=(");
 	  stmt_list(0, "<=", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == IDENT_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("47");
 	  code -> WriteCode(tabs, lex->GetLexeme());
 	  code -> WriteCode(0, "(");
 	  token = lex->GetToken();
 	  stmt_list(tabs, "", ret);
 	  code -> WriteCode(0, ")");
+    buildingStatement--;
 	}
       else if (token == MINUS_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  // applying rules 37
 	  lex->ReportRuleUsed("37");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "-");
 	  stmt_list(0, "-", ret);
+    buildingStatement--;
 	}
       
       else if(token == DIV_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  lex->ReportRuleUsed("38");
 	  token = lex->GetToken();
 	  stmt(tabs, "", ret);
 	  code -> WriteCode(0, "/");
 	  stmt_list(0, "/", ret);
+    buildingStatement--;
 	}
       else if (token == NEWLINE_T)
 	{
+    if (buildingStatement == 0)
+    {
+      code->WriteCode(tabs, "returnValue=");
+    }
+    buildingStatement++;
 	  // applying rule 49
 	  lex->ReportRuleUsed("49");
 	  code -> WriteCode(tabs, "print('')");
 	  token = lex->GetToken();
+    buildingStatement--;
 	}
       else
 	{
@@ -1133,15 +1430,16 @@ int SyntacticalAnalyzer::define(int tabs)
         param_list(tabs, ret);
         if (token == RPAREN_T)
         {
-          code -> WriteCode(0, "): \n");
+          code -> WriteCode(0, "):");
           tabs++;
           token = lex->GetToken();
-	  code -> WriteCode(tabs, "\n");
+	        code -> WriteCode(tabs, "\n");
+          code -> WriteCode(tabs, "returnValue = None\n");
           stmt(tabs, "", ret);
-	  //code -> WriteCode(tabs, "\n");
+	        //code -> WriteCode(tabs, "\n");
           stmt_list(tabs, "", ret);
-	  //code -> WriteCode(tabs, "\n");
-	  tabs--;
+	        //code -> WriteCode(tabs, "\n");
+	        tabs--;
           if (token == RPAREN_T)
           {
             token = lex->GetToken();
@@ -1175,7 +1473,7 @@ int SyntacticalAnalyzer::define(int tabs)
     lex->ReportError("'DEFINE_T' expected");
     errors++;
   }
-  code -> WriteCode(tabs + 1, "return\n");
+  code -> WriteCode(tabs + 1, "return returnValue\n");
   lex->ReportFunctionExited("Define", token);
   return errors;
 }
