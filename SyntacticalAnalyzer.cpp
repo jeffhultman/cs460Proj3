@@ -1781,12 +1781,13 @@ int SyntacticalAnalyzer::more_defines(int tabs)
   string ret = "";
   if (token == IDENT_T)
   {
+    buildingStatement++;
     // applying rule 3
     lex->ReportRuleUsed("3");
     code->WriteCode(tabs, lex->GetLexeme() + "(");
     token = lex->GetToken();
     stmt_list(tabs, "", ret);
-    code->WriteCode(0, ")");
+    //code->WriteCode(0, ")");
     stmt_list(tabs, "", ret);
     code->WriteCode(0, ")\n");
     if (token == RPAREN_T)
@@ -1798,6 +1799,7 @@ int SyntacticalAnalyzer::more_defines(int tabs)
       lex->ReportError("'RPAREN_T' expected");
       errors++;
     }
+    buildingStatement--;
   }
   else
   {

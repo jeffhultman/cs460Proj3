@@ -8,3 +8,4 @@
 'invalid_parameter
  )
 )
+(square 5)
