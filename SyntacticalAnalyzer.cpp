@@ -531,7 +531,8 @@ int SyntacticalAnalyzer::any_other_token(int tabs, string ret)
     errors++;
     token = lex->GetToken();
   }
-
+  if (token != RPAREN_T)
+      code->WriteCode(0, ",");
   lex->ReportFunctionExited("Any_Other_Token", token);
   return errors;
 }
