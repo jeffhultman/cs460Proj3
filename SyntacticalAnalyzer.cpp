@@ -27,10 +27,15 @@ SyntacticalAnalyzer::~SyntacticalAnalyzer()
 
 int SyntacticalAnalyzer::any_other_token(int tabs, string ret)
 {
+  // Most likely from a string literal or list, will write to the python file
+  // file as the intended type.
   lex->ReportFunctionEntered("Any_Other_Token", token);
 
   if (token == IDENT_T)
   {
+    //A statement being built means that we are in the middle of the line
+    // and dont want to place an assignment operator. If a statement is not being
+    // built then the return value can be overridden with the current statement.
     if (buildingStatement == 0)
       {
         code->WriteCode(tabs, "returnValue=");
@@ -44,6 +49,7 @@ int SyntacticalAnalyzer::any_other_token(int tabs, string ret)
     code->WriteCode(0, "\"");
     buildingStatement--;
   }
+  // Each token check will handle a type of token in a similar way.
   else if (token == NUMLIT_T)
   {
     if (buildingStatement == 0)
@@ -51,10 +57,14 @@ int SyntacticalAnalyzer::any_other_token(int tabs, string ret)
         code->WriteCode(tabs, "returnValue=");
         tabs = 0;
       }
+    // We just started a statement so everything until we see until we finish this
+    // statement will be part of this statement.
     buildingStatement++;
     lex->ReportRuleUsed("52");
     code->WriteCode(0, lex->GetLexeme());
     token = lex->GetToken();
+    // Now the statement is over, this one may not have been all that exciting but later
+    // ones will be, see the comment over those lines for an explination.
     buildingStatement--;
   }
   else if (token == STRLIT_T)
@@ -74,6 +84,8 @@ int SyntacticalAnalyzer::any_other_token(int tabs, string ret)
   }
   else if (token == CONS_T)
   {
+    // Note that at this point, all operators are being
+    // interpreted as strings, not the operator theyre named after.
     if (buildingStatement == 0)
       {
         code->WriteCode(tabs, "returnValue=");
@@ -488,6 +500,7 @@ int SyntacticalAnalyzer::any_other_token(int tabs, string ret)
 
   else if (token == LPAREN_T)
   {
+    // here is an exciting case, as before a statement is being built.
     if (buildingStatement == 0)
       {
         code->WriteCode(tabs, "returnValue=");
@@ -498,6 +511,8 @@ int SyntacticalAnalyzer::any_other_token(int tabs, string ret)
     lex->ReportRuleUsed("50");
     code->WriteCode(0, " ");
     token = lex->GetToken();
+    // Note at this point more tokens is being called, it will not have return
+    // statements since anything it does is still part of this statement.
     more_tokens(tabs, ret);
     if (token == RPAREN_T)
       token = lex->GetToken();
@@ -510,6 +525,8 @@ int SyntacticalAnalyzer::any_other_token(int tabs, string ret)
   }
   else if (token == SQUOTE_T)
   {
+    // A single quote normally denotes a list, however inside of a list it behaves strangely.
+    // This is a special case to handle specifically that case.
     if (buildingStatement == 0)
       {
         code->WriteCode(tabs, "returnValue=");
@@ -539,6 +556,14 @@ int SyntacticalAnalyzer::any_other_token(int tabs, string ret)
 
 int SyntacticalAnalyzer::action(int tabs, string ret)
 {
+  // Action is nearly identicle to the Lparen segment of the any other token
+  // function. The main difference is that the output statements and operations
+  // will do something and not be interpreted as strings. 
+  /*****************************************************************************/
+  //Note that action is split into two parts, Actions with a conditional that have an else
+  // and actions that do not have the else. Given this implementation there is a huge block of code
+  // That is nearly identicle to the code below. This can certainly be optimized and reduced but simple has
+  // not been.
   int tempTabs = tabs;
   lex->ReportFunctionEntered("Action", token);
   if (flag == 0)
@@ -546,6 +571,7 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
     flag = 1;
     if (token == IF_T)
     {
+      // any statement thats part of the if should not override the returnValue.
       // applying rule 24
       buildingStatement++;
       lex->ReportRuleUsed("24");
@@ -554,6 +580,7 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
       stmt(0, "", ret);
       code->WriteCode(0, ":\n");
       buildingStatement--;
+      // Because we are converting to python, we have to carefully watch over our tabs.
       tabs++;
       stmt(tabs, "", ret);
       tabs--;
@@ -564,24 +591,22 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
     else if (token == COND_T)
     {
       // applying rule 25
+      //Conditionals were treated as seperate if statements, not elif statements.
       lex->ReportRuleUsed("25");
-      //code -> WriteCode(tabs, "if ");
       token = lex->GetToken();
       if (token == LPAREN_T)
       {
-        //buildingStatement++;
         token = lex->GetToken();
-        //tabs++;
         if (token == ELSE_T)
         {
+          //In scheme, having a else statement by itself is valid, to address this, we've
+          // decided to have an impossible to enter if statement.
           code->WriteCode(tabs, "if (0):\n");
           code->WriteCode(tabs + 1, "0\n");
           stmt_pair_body(tabs, ret);
         }
         else
           stmt_pair_body(tabs, ret);
-        //tabs--;
-        //buildingStatement--;
         code->WriteCode(0, "\n");
       }
       else
@@ -592,6 +617,9 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
     }
     else if (token == LISTOP_T)
     {
+      //There is an included file for python that allows for listoperations. Since
+      // nearly all of the if blocks below are nearly identicle or use repeating logic
+      // new comments will only be provided for those with new logic.
       lex->ReportRuleUsed("26");
       if (buildingStatement == 0)
       {
@@ -713,6 +741,7 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 
     else if (token == DISPLAY_T)
     {
+      //Python's print behaves similarly to display
       if (buildingStatement == 0)
       {
         code->WriteCode(tabs, "returnValue=");
@@ -959,6 +988,7 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
     }
     else if (token == NEWLINE_T)
     {
+      //An empty print statement behaves the same as newline in scheme
       if (buildingStatement == 0)
       {
         code->WriteCode(tabs, "returnValue=");
@@ -977,6 +1007,8 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
       errors++;
       token = lex->GetToken();
     }
+    // reset the tabs to their original value, set a flag for dealing with if
+    // statements, and write a newline.
     code->WriteCode(tabs, "\n");
     flag = 0;
     tabs = tempTabs;
@@ -1426,10 +1458,12 @@ int SyntacticalAnalyzer::action(int tabs, string ret)
 
 int SyntacticalAnalyzer::stmt_pair_body(int tabs, string ret)
 {
+  // This block of code is specific for if elif and else statements.
   lex->ReportFunctionEntered("Stmt_Pair_Body", token);
 
   if (token == ELSE_T)
   {
+    //pretty much just writes and else to the python file.
     // applying rule 23
     lex->ReportRuleUsed("23");
     code->WriteCode(tabs, lex->GetLexeme() + ":\n");
@@ -1448,6 +1482,7 @@ int SyntacticalAnalyzer::stmt_pair_body(int tabs, string ret)
   }
   else
   {
+    // its some form of if and should be treated accordingly.
     // applying rule 22
     lex->ReportRuleUsed("22");
     buildingStatement++;
@@ -1476,6 +1511,8 @@ int SyntacticalAnalyzer::stmt_pair_body(int tabs, string ret)
 
 int SyntacticalAnalyzer::stmt_pair(int tabs, string ret)
 {
+  //more statement operations. Handles which rule belonging to statement pair should be
+  // taken; 20 or 21.
   lex->ReportFunctionEntered("Stmt_Pair", token);
 
   if (token == LPAREN_T)
@@ -1501,7 +1538,7 @@ int SyntacticalAnalyzer::stmt_pair(int tabs, string ret)
 int SyntacticalAnalyzer::else_part(int tabs, string ret)
 {
   lex->ReportFunctionEntered("Else_Part", token);
-
+  // concludes an if statement either with or without an else depending on the rule.
   if (token == RPAREN_T)
   {
     // applying rule 19
@@ -1524,6 +1561,8 @@ int SyntacticalAnalyzer::else_part(int tabs, string ret)
 
 int SyntacticalAnalyzer::param_list(int tabs, string ret)
 {
+  // handles lists of paramaters in the calling or declaration of
+  // functions.
   lex->ReportFunctionEntered("Param_List", token);
 
   if (token == RPAREN_T)
@@ -1550,6 +1589,7 @@ int SyntacticalAnalyzer::param_list(int tabs, string ret)
 
 int SyntacticalAnalyzer::more_tokens(int tabs, string ret)
 {
+  //handles the more token rules.
   lex->ReportFunctionEntered("More_Tokens", token);
 
   if (token == RPAREN_T)
@@ -1571,6 +1611,7 @@ int SyntacticalAnalyzer::more_tokens(int tabs, string ret)
 
 int SyntacticalAnalyzer::quoted_lit(int tabs, string ret)
 {
+  //Applies rule 13 and just calls any_other_token
   lex->ReportFunctionEntered("Quoted_Lit", token);
   // applying rule 13
   lex->ReportRuleUsed("13");
@@ -1582,6 +1623,7 @@ int SyntacticalAnalyzer::quoted_lit(int tabs, string ret)
 
 int SyntacticalAnalyzer::literal(int tabs, string ret)
 {
+  // Handles the literal rule, Non list literals are just written as is.
   lex->ReportFunctionEntered("Literal", token);
   int listFlag = 0;
   if (token == NUMLIT_T)
@@ -1615,6 +1657,9 @@ int SyntacticalAnalyzer::literal(int tabs, string ret)
   }
   else if (token == SQUOTE_T)
   {
+    //List literals have special handling, they look different in Python so a [] needs
+    // to be written. Also identification needs to be provided for whether a statement is being
+    // built.
     // applying rule 12
     if (buildingStatement == 0)
       {
@@ -1651,6 +1696,7 @@ int SyntacticalAnalyzer::literal(int tabs, string ret)
 
 int SyntacticalAnalyzer::stmt(int tabs, string act, string ret)
 {
+  // Constructs a statement. Statments include literals, any operation, or logic.
   lex->ReportFunctionEntered("Stmt", token);
 
   if (token == IDENT_T)
@@ -1687,6 +1733,7 @@ int SyntacticalAnalyzer::stmt(int tabs, string act, string ret)
 
 int SyntacticalAnalyzer::stmt_list(int tabs, string act, string ret)
 {
+  // Identifies how many statements there are in a function and handles their construction.
   lex->ReportFunctionEntered("Stmt_List", token);
 
   if (token == RPAREN_T)
@@ -1707,6 +1754,8 @@ int SyntacticalAnalyzer::stmt_list(int tabs, string act, string ret)
 
 int SyntacticalAnalyzer::define(int tabs)
 {
+  //Handles the definition of a function. It may look complicated, but most of
+  // it is either walking over tokens or calling other functions.
   lex->ReportFunctionEntered("Define", token);
 
   string ret = "";
@@ -1730,6 +1779,7 @@ int SyntacticalAnalyzer::define(int tabs)
           tabs++;
           token = lex->GetToken();
           code->WriteCode(tabs, "\n");
+          // Every function has a return value in Scheme.
           code->WriteCode(tabs, "returnValue = None\n");
           stmt(tabs, "", ret);
           //code -> WriteCode(tabs, "\n");
@@ -1776,6 +1826,8 @@ int SyntacticalAnalyzer::define(int tabs)
 
 int SyntacticalAnalyzer::more_defines(int tabs)
 {
+  // Determines whether a function is being declared or called and handles the 
+  // appropriate rule.
   lex->ReportFunctionEntered("More_Defines", token);
 
   string ret = "";
@@ -1824,6 +1876,8 @@ int SyntacticalAnalyzer::more_defines(int tabs)
 
 int SyntacticalAnalyzer::program(int tabs)
 {
+  // ensures that there is at least one define in program and calls the functions
+  // to handle them.
   lex->ReportFunctionEntered("Program", token);
 
   if (token == LPAREN_T)
