@@ -31,11 +31,11 @@ test:
 	cat P3T3-1.py
 
 clean : 
-	rm *.o P2.out *.gch *~ *.p2 *.lst *.dbg rm P3T*.py
+	rm -f *.o P2.out *.gch *~ *.p2 *.lst *.dbg rm P3T*.py
 
 submit : Project2.cpp LexicalAnalyzer.h LexicalAnalyzer.cpp SyntacticalAnalyzer.h SyntacticalAnalyzer.cpp makefile README.txt
-	rm -rf TeamYP2
-	mkdir TeamYP2
+	rm -rf T3P2py
+	mkdir T3P2py
 	cp Project2.cpp TeamYP2
 	cp LexicalAnalyzer.h TeamYP2
 	cp LexicalAnalyzer.cpp TeamYP2
